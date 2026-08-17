@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecurEdge — AICTE Real-Time AI Threat Engine</title>
+    <title>SecurEdge — AICTE Autonomous AI Threat Center</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-body: #080c14;
-            --bg-surface: #0f172a;
-            --bg-card: #131d31;
-            --bg-input: #1a2744;
-            --border-subtle: #1e293b;
-            --border-highlight: #334155;
+            --bg-body: #070b12;
+            --bg-surface: #0e1626;
+            --bg-card: #121c30;
+            --bg-input: #17243d;
+            --border-subtle: #1c2b48;
+            --border-highlight: #2c3f66;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
@@ -22,6 +22,7 @@
             --accent-green: #10b981;
             --accent-red: #ef4444;
             --accent-amber: #f59e0b;
+            --accent-purple: #a855f7;
         }
 
         * {
@@ -35,32 +36,32 @@
             color: var(--text-primary);
             font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
             min-height: 100vh;
-            padding: 24px;
+            padding: 20px;
             -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 1380px;
+            max-width: 1440px;
             margin: 0 auto;
         }
 
         /* Top Header */
         .header {
-            background: linear-gradient(180deg, #111c35 0%, #0d1527 100%);
+            background: linear-gradient(180deg, #111e38 0%, #0c1527 100%);
             border: 1px solid var(--border-highlight);
             border-radius: 16px;
-            padding: 24px 32px;
-            margin-bottom: 24px;
+            padding: 20px 28px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 16px;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
         }
 
         .header-title-wrap h1 {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 800;
             letter-spacing: -0.5px;
             color: #ffffff;
@@ -71,7 +72,7 @@
 
         .header-title-wrap p {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
             margin-top: 4px;
         }
 
@@ -84,7 +85,7 @@
             color: #34d399;
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -106,20 +107,20 @@
 
         .stat-pills {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
         .stat-pill {
-            background: #182238;
+            background: #15223a;
             border: 1px solid var(--border-highlight);
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 10px;
             text-align: right;
         }
 
         .stat-pill .label {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
             color: var(--text-muted);
             font-weight: 600;
@@ -127,17 +128,96 @@
         }
 
         .stat-pill .val {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             color: var(--accent-cyan);
             font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Proactive Control Strip */
+        .proactive-strip {
+            background: linear-gradient(135deg, rgba(14, 22, 38, 0.9), rgba(18, 28, 48, 0.9));
+            border: 1px solid var(--border-highlight);
+            border-radius: 14px;
+            padding: 16px 24px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .stream-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-stream-toggle {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-stream-toggle.running {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-stream-toggle:hover {
+            transform: translateY(-1px);
+        }
+
+        .attack-triggers {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .attack-triggers span {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .btn-attack-inject {
+            background: #231526;
+            border: 1px solid #6b21a8;
+            color: #d8b4fe;
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-attack-inject:hover {
+            background: #581c87;
+            color: #ffffff;
+            border-color: #a855f7;
+            transform: translateY(-1px);
         }
 
         /* Navigation Tabs */
         .nav-tabs {
             display: flex;
             gap: 8px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             border-bottom: 1px solid var(--border-subtle);
             padding-bottom: 8px;
         }
@@ -156,11 +236,11 @@
 
         .nav-tab:hover {
             color: var(--text-primary);
-            background: #131d31;
+            background: #121c30;
         }
 
         .nav-tab.active {
-            background: #1e293b;
+            background: #17243d;
             color: var(--accent-cyan);
             border-color: var(--border-highlight);
         }
@@ -177,10 +257,10 @@
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            gap: 20px;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1100px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
@@ -190,14 +270,14 @@
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 14px;
+            padding: 22px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
         }
 
         .card-header {
-            margin-bottom: 20px;
-            padding-bottom: 14px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             justify-content: space-between;
@@ -205,7 +285,7 @@
         }
 
         .card-header h2 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
             display: flex;
@@ -218,14 +298,14 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .btn-preset {
-            background: #17233d;
+            background: #17243d;
             border: 1px solid var(--border-highlight);
             color: #cbd5e1;
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
@@ -234,7 +314,7 @@
         }
 
         .btn-preset:hover {
-            background: #233458;
+            background: #233558;
             color: #ffffff;
             border-color: var(--accent-cyan);
         }
@@ -249,11 +329,11 @@
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 14px;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .form-group.full-width {
@@ -262,7 +342,7 @@
 
         label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-secondary);
             margin-bottom: 6px;
@@ -274,8 +354,8 @@
             border: 1px solid var(--border-highlight);
             border-radius: 8px;
             color: #ffffff;
-            padding: 10px 14px;
-            font-size: 14px;
+            padding: 9px 12px;
+            font-size: 13px;
             font-family: inherit;
             outline: none;
             transition: border-color 0.2s;
@@ -302,7 +382,7 @@
 
         .slider-val {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--accent-cyan);
             min-width: 45px;
@@ -311,9 +391,9 @@
 
         .radio-group {
             display: flex;
-            gap: 16px;
+            gap: 14px;
             background: var(--bg-input);
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 8px;
             border: 1px solid var(--border-highlight);
         }
@@ -322,7 +402,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 13px;
+            font-size: 12px;
             color: #ffffff;
             cursor: pointer;
             margin: 0;
@@ -333,31 +413,26 @@
             background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
             color: #ffffff;
             border: none;
-            border-radius: 10px;
-            padding: 14px;
-            font-size: 16px;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 6px;
             box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
             transition: all 0.2s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
         }
 
         .btn-inspect:hover {
             background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+            transform: translateY(-1px);
         }
 
         /* Verdict Cards */
         .verdict-box {
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 18px;
+            margin-bottom: 18px;
             transition: all 0.3s ease;
         }
 
@@ -377,11 +452,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .verdict-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
         }
 
@@ -389,9 +464,9 @@
         .verdict-box.anomaly .verdict-title { color: #fecaca; }
 
         .verdict-badge {
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
             text-transform: uppercase;
         }
@@ -400,49 +475,107 @@
         .verdict-box.anomaly .verdict-badge { background-color: #b91c1c; color: #ffffff; }
 
         .verdict-details {
-            font-size: 14px;
+            font-size: 13px;
             color: #e2e8f0;
             display: flex;
-            gap: 16px;
+            gap: 14px;
         }
 
         .verdict-details code {
             background: rgba(0, 0, 0, 0.3);
-            padding: 2px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
             font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
         }
 
+        /* Containment Button */
+        .containment-bar {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px dashed #ef4444;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-contain {
+            background: linear-gradient(135deg, #ef4444, #991b1b);
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.4);
+            transition: all 0.15s;
+        }
+
+        .btn-contain:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #f87171, #b91c1c);
+        }
+
+        /* Stream Log Terminal */
+        .stream-log {
+            background-color: #080c14;
+            border: 1px solid #1c2b48;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            height: 140px;
+            overflow-y: auto;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .stream-log .log-normal { color: #34d399; }
+        .stream-log .log-alert { color: #f87171; font-weight: bold; }
+
+        /* Incident Markdown Card */
+        .incident-card {
+            background-color: #090d16;
+            border: 1px solid #1c2b48;
+            border-radius: 8px;
+            padding: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
         /* XAI Table */
         .table-wrap {
             overflow-x: auto;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         th {
-            background-color: #17233d;
+            background-color: #15223a;
             color: var(--text-secondary);
             font-weight: 600;
             text-align: left;
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-bottom: 1px solid var(--border-highlight);
         }
 
         td {
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-bottom: 1px solid var(--border-subtle);
             color: #ffffff;
-        }
-
-        tr:hover td {
-            background-color: rgba(255, 255, 255, 0.02);
         }
 
         .z-badge {
@@ -450,50 +583,36 @@
             font-weight: 700;
             color: #f87171;
             background: rgba(239, 68, 68, 0.15);
-            padding: 2px 6px;
+            padding: 1px 5px;
             border-radius: 4px;
         }
 
-        /* Incident Markdown Card */
-        .incident-card {
-            background-color: #0b1120;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            padding: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            line-height: 1.6;
-            color: #e2e8f0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-        }
-
-        /* Benchmark Table */
+        /* Benchmark Grid */
         .benchmark-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 14px;
+            margin-bottom: 20px;
         }
 
         .metric-card {
-            background: #131d31;
+            background: #121c30;
             border: 1px solid var(--border-highlight);
-            padding: 20px;
+            padding: 16px;
             border-radius: 12px;
             text-align: center;
         }
 
         .metric-card .num {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             color: var(--accent-cyan);
             font-family: 'JetBrains Mono', monospace;
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
         .metric-card .desc {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
             text-transform: uppercase;
             font-weight: 600;
@@ -507,10 +626,10 @@
             <div class="header-title-wrap">
                 <div class="badge-live">
                     <div class="pulse-dot"></div>
-                    <span>Zero-Trust Kernel Telemetry Active</span>
+                    <span id="system-status-text">Autonomous AICTE Telemetry Active</span>
                 </div>
                 <h1>🛡️ SecurEdge AI Anomaly Engine</h1>
-                <p>AICTE Data Center Cybersecurity Portal (CHA-39) &bull; Team Cyber Lakshya (<span style="color:var(--accent-cyan); font-weight:600;">DEPSTAR-SIH-880700</span>)</p>
+                <p>Real-Time Zero-Trust Behavioral Threat Engine (CHA-39) &bull; Team Cyber Lakshya (<span style="color:var(--accent-cyan); font-weight:600;">DEPSTAR-SIH-880700</span>)</p>
             </div>
             <div class="stat-pills">
                 <div class="stat-pill">
@@ -526,34 +645,56 @@
                     <div class="val">99.0%</div>
                 </div>
                 <div class="stat-pill">
-                    <div class="label">Latency</div>
-                    <div class="val">&lt; 20 ms</div>
+                    <div class="label">Scoring Latency</div>
+                    <div class="val">&lt; 0.02 ms</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Proactive Stream Control Strip -->
+        <div class="proactive-strip">
+            <div class="stream-controls">
+                <button id="btn-stream" class="btn-stream-toggle" onclick="toggleStream()">
+                    <span>▶ Start Proactive Telemetry Stream</span>
+                </button>
+                <select id="stream-speed" style="width:130px; padding:8px;" onchange="updateStreamSpeed()">
+                    <option value="1500">Normal (1.5s)</option>
+                    <option value="800">Fast (0.8s)</option>
+                    <option value="300">High Speed (0.3s)</option>
+                </select>
+                <span id="stream-indicator" style="font-size:12px; color:var(--text-muted);">Status: Idle (Click to start continuous live stream)</span>
+            </div>
+            <div class="attack-triggers">
+                <span>⚡ Inject Instant Attack:</span>
+                <button class="btn-attack-inject" onclick="injectAttack('rootshell')">🔴 Root Shell</button>
+                <button class="btn-attack-inject" onclick="injectAttack('bruteforce')">🔴 Brute Force</button>
+                <button class="btn-attack-inject" onclick="injectAttack('portscan')">🔴 Port Scan</button>
+                <button class="btn-attack-inject" onclick="injectAttack('synflood')">🔴 SYN Flood</button>
             </div>
         </div>
 
         <!-- Navigation Tabs -->
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('tab-inspector')">🔍 Live Telemetry Inspector</button>
+            <button class="nav-tab active" onclick="switchTab('tab-inspector')">🔍 Proactive Telemetry Inspector</button>
             <button class="nav-tab" onclick="switchTab('tab-benchmark')">📈 Ground-Truth Benchmark Matrix</button>
             <button class="nav-tab" onclick="switchTab('tab-architecture')">🏛️ Zero-Trust Architecture & MeitY</button>
         </div>
 
-        <!-- TAB 1: Live Telemetry Inspector -->
+        <!-- TAB 1: Proactive Telemetry Inspector -->
         <div id="tab-inspector" class="tab-content active">
             <div class="dashboard-grid">
-                <!-- Left Column: Controls -->
+                <!-- Left Column: Controls & Presets -->
                 <div class="card">
                     <div class="card-header">
-                        <h2>⚡ Quick Scenario Presets</h2>
-                        <span style="font-size:12px; color:var(--text-muted);">One-Click Threat Simulation</span>
+                        <h2>⚡ Quick Attack Presets & Manual Override</h2>
+                        <span style="font-size:12px; color:var(--text-muted);">Custom Packet Tuning</span>
                     </div>
 
                     <div class="preset-buttons">
-                        <button class="btn-preset active" onclick="applyPreset('normal')">🟢 Normal HTTP Traffic</button>
+                        <button class="btn-preset active" onclick="applyPreset('normal')">🟢 Normal HTTP Session</button>
                         <button class="btn-preset" onclick="applyPreset('portscan')">🔴 Port Scan Sweep</button>
                         <button class="btn-preset" onclick="applyPreset('bruteforce')">🔴 Brute-Force Logins</button>
-                        <button class="btn-preset" onclick="applyPreset('rootshell')">🔴 Privilege Escalation (Root)</button>
+                        <button class="btn-preset" onclick="applyPreset('rootshell')">🔴 Root Privilege Escalation</button>
                         <button class="btn-preset" onclick="applyPreset('synflood')">🔴 SYN Flood DDoS</button>
                     </div>
 
@@ -573,22 +714,22 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Service (Port / Application)</label>
+                            <label>Service (Port / App)</label>
                             <input type="text" id="service" value="http">
                         </div>
 
                         <div class="form-group">
-                            <label>TCP Connection Flag</label>
+                            <label>TCP Flag</label>
                             <select id="flag">
-                                <option value="SF">SF (Normal Established)</option>
-                                <option value="S0">S0 (SYN Sent - No Reply)</option>
-                                <option value="REJ">REJ (Connection Rejected)</option>
-                                <option value="RSTO">RSTO (Reset Outbound)</option>
+                                <option value="SF">SF (Established)</option>
+                                <option value="S0">S0 (SYN Sent No Reply)</option>
+                                <option value="REJ">REJ (Rejected)</option>
+                                <option value="RSTO">RSTO (Reset)</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>Source Payload (Bytes)</label>
+                            <label>Payload (Bytes)</label>
                             <input type="number" id="src_bytes" value="215">
                         </div>
 
@@ -638,11 +779,18 @@
                     </button>
                 </div>
 
-                <!-- Right Column: Live Output -->
+                <!-- Right Column: Proactive Live Output & SOC Card -->
                 <div class="card">
                     <div class="card-header">
                         <h2>📊 Autonomous AI Security Investigation</h2>
                         <span id="eval-time" style="font-size:12px; color:var(--accent-cyan); font-family:'JetBrains Mono';">Latency: 0.011 ms</span>
+                    </div>
+
+                    <!-- Live Stream Ticker -->
+                    <label>📡 Live Telemetry Stream Ticker (Streaming Ingestion):</label>
+                    <div class="stream-log" id="stream-log-box">
+                        <div>[23:44:00] 🟢 Initialized SecurEdge Autonomous Observability Bus.</div>
+                        <div>[23:44:01] 🟢 Baseline stats: 100,655 real network connections loaded.</div>
                     </div>
 
                     <!-- Verdict Card -->
@@ -657,33 +805,42 @@
                         </div>
                     </div>
 
+                    <!-- Autonomous Containment Bar (Appears on Threat) -->
+                    <div id="containment-bar" class="containment-bar" style="display:none;">
+                        <div>
+                            <b style="color:#fecaca; font-size:13px;">🚨 Autonomous Incident Remediation Available:</b>
+                            <p style="color:#e2e8f0; font-size:11px; margin:2px 0 0 0;" id="containment-desc">Auto-mitigate: VPC Node Isolation + eBPF Shell Termination</p>
+                        </div>
+                        <button class="btn-contain" onclick="executeContainment()">⚡ Execute Containment</button>
+                    </div>
+
                     <!-- Explainable AI Table -->
-                    <h3 style="font-size:15px; font-weight:700; color:var(--accent-cyan); margin-bottom:10px;">🔍 Explainable AI (XAI) Feature Divergence</h3>
+                    <h3 style="font-size:14px; font-weight:700; color:var(--accent-cyan); margin-bottom:8px;">🔍 Explainable AI (XAI) Feature Divergence</h3>
                     <div class="table-wrap">
                         <table id="xai-table">
                             <thead>
                                 <tr>
-                                    <th>Telemetry Feature</th>
+                                    <th>Feature</th>
                                     <th>Observed</th>
                                     <th>Baseline Mean</th>
                                     <th>Divergence (Z-Score)</th>
-                                    <th>Threat Indicator</th>
+                                    <th>Threat Assessment</th>
                                 </tr>
                             </thead>
                             <tbody id="xai-tbody">
                                 <tr>
-                                    <td><code>count</code></td>
-                                    <td>2.0</td>
-                                    <td>8.16</td>
-                                    <td><span style="color:#34d399;">Normal</span></td>
-                                    <td>Host connection rate</td>
+                                    <td><code>all_features</code></td>
+                                    <td>In-Range</td>
+                                    <td>Normal</td>
+                                    <td><span style="color:#34d399; font-weight:700;">Within ±1.5σ</span></td>
+                                    <td style="color:#94a3b8;">Normal operational telemetry</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <!-- Autonomous Threat Report -->
-                    <h3 style="font-size:15px; font-weight:700; color:#f87171; margin-bottom:10px;">🚨 Autonomous AI Threat Incident Report</h3>
+                    <h3 style="font-size:14px; font-weight:700; color:#f87171; margin-bottom:8px;">🚨 Autonomous AI Threat Incident Report</h3>
                     <div class="incident-card" id="incident-report">Waiting for inspection telemetry...</div>
                 </div>
             </div>
@@ -746,7 +903,7 @@
                 <div class="card-header">
                     <h2>🏛️ SecurEdge Sovereign Security Architecture (MeitY & NIST Compliance)</h2>
                 </div>
-                <div style="line-height: 1.8; color: #cbd5e1; font-size: 15px;">
+                <div style="line-height: 1.8; color: #cbd5e1; font-size: 14px;">
                     <p><b>1. Continuous Behavioral Zero-Trust (NIST SP 800-53 Baseline):</b><br>
                     Unlike traditional perimeter security that only verifies user credentials at initial login, SecurEdge performs continuous statistical telemetry scoring on every active connection.</p>
                     <br>
@@ -754,20 +911,27 @@
                     Telemetry logs and access matrices remain strictly on sovereign Indian infrastructure. No student or institutional credentials are routed via foreign commercial cloud networks.</p>
                     <br>
                     <p><b>3. Autonomous Containment Actions:</b><br>
-                    When an anomaly score breaches critical thresholds ($Z > 3.0\sigma$), the portal triggers 1-click autonomous containment: JWT revocation, dynamic firewall block, and eBPF kernel process termination.</p>
+                    When an anomaly score breaches critical thresholds (Z > 3.0σ), the portal triggers 1-click autonomous containment: JWT revocation, dynamic firewall block, and eBPF kernel process termination.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Baseline statistical parameters from 97,278 clean records
         const baseline = {
             count: { mean: 8.16, std: 17.7 },
             diff_srv_rate: { mean: 0.02, std: 0.11 },
             num_failed_logins: { mean: 0.00, std: 0.02 },
             src_bytes: { mean: 231.2, std: 1420.0 }
         };
+
+        const nodes = [
+            "Web-Server-AICTE-01",
+            "Edge-Firewall-Node-02",
+            "IAM-Auth-Gateway-01",
+            "Core-Database-Node-01",
+            "Load-Balancer-Primary"
+        ];
 
         const presets = {
             normal: { entity: "Web-Server-AICTE-01", protocol: "tcp", service: "http", flag: "SF", src_bytes: 215, count: 2, diff_srv: 0.0, failed_logins: 0, root: "0", su: "0" },
@@ -776,6 +940,11 @@
             rootshell: { entity: "Core-Database-Node-01", protocol: "tcp", service: "ftp", flag: "SF", src_bytes: 340, count: 4, diff_srv: 0.0, failed_logins: 0, root: "1", su: "1" },
             synflood: { entity: "Load-Balancer-Primary", protocol: "tcp", service: "private", flag: "S0", src_bytes: 0, count: 500, diff_srv: 0.0, failed_logins: 0, root: "0", su: "0" }
         };
+
+        let streamTimer = null;
+        let isStreaming = false;
+        let streamSpeed = 1500;
+        let currentRemediations = [];
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -791,7 +960,7 @@
 
         function applyPreset(type) {
             document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event && event.target && event.target.classList) event.target.classList.add('active');
 
             const p = presets[type];
             document.getElementById('target_entity').value = p.entity;
@@ -813,6 +982,100 @@
             runInspection();
         }
 
+        function injectAttack(type) {
+            applyPreset(type);
+            logStream(`🔴 [INJECTED ATTACK] Launched ${type.toUpperCase()} into telemetry stream!`, true);
+        }
+
+        function updateStreamSpeed() {
+            streamSpeed = parseInt(document.getElementById('stream-speed').value);
+            if (isStreaming) {
+                clearInterval(streamTimer);
+                streamTimer = setInterval(generateStreamEvent, streamSpeed);
+            }
+        }
+
+        function toggleStream() {
+            const btn = document.getElementById('btn-stream');
+            const ind = document.getElementById('stream-indicator');
+
+            if (!isStreaming) {
+                isStreaming = true;
+                btn.className = "btn-stream-toggle running";
+                btn.innerHTML = "<span>⏸ Pause Live Telemetry Stream</span>";
+                ind.innerText = "Status: 🟢 Streaming live network packets...";
+                ind.style.color = "#34d399";
+                streamTimer = setInterval(generateStreamEvent, streamSpeed);
+            } else {
+                isStreaming = false;
+                clearInterval(streamTimer);
+                btn.className = "btn-stream-toggle";
+                btn.innerHTML = "<span>▶ Start Proactive Telemetry Stream</span>";
+                ind.innerText = "Status: ⏸ Stream Paused";
+                ind.style.color = "var(--text-muted)";
+            }
+        }
+
+        function generateStreamEvent() {
+            // 85% normal traffic, 15% periodic attacks
+            const rand = Math.random();
+            const node = nodes[Math.floor(Math.random() * nodes.length)];
+            
+            if (rand > 0.88) {
+                // Random attack event
+                const attackTypes = ['portscan', 'bruteforce', 'rootshell', 'synflood'];
+                const selectedAttack = attackTypes[Math.floor(Math.random() * attackTypes.length)];
+                applyPreset(selectedAttack);
+                logStream(`🔴 ALERT: ${selectedAttack.toUpperCase()} detected on ${document.getElementById('target_entity').value}`, true);
+            } else {
+                // Normal traffic event
+                const countVal = Math.floor(Math.random() * 6) + 1;
+                const bytes = Math.floor(Math.random() * 800) + 150;
+                
+                document.getElementById('target_entity').value = node;
+                document.getElementById('protocol_type').value = "tcp";
+                document.getElementById('service').value = Math.random() > 0.5 ? "http" : "https";
+                document.getElementById('flag').value = "SF";
+                document.getElementById('src_bytes').value = bytes;
+                document.getElementById('count').value = countVal;
+                document.getElementById('diff_srv_rate').value = 0.0;
+                document.getElementById('num_failed_logins').value = 0;
+                document.querySelectorAll('input[name="root_shell"]').forEach(r => r.checked = (r.value === "0"));
+                document.querySelectorAll('input[name="su_attempted"]').forEach(r => r.checked = (r.value === "0"));
+
+                updateSliderVal('count');
+                updateSliderVal('diff_srv_rate');
+                updateSliderVal('num_failed_logins');
+
+                runInspection();
+                logStream(`🟢 ${node} | TCP Established (${bytes}B, count:${countVal}) -> HEALTHY`, false);
+            }
+        }
+
+        function logStream(msg, isAlert) {
+            const box = document.getElementById('stream-log-box');
+            const time = new Date().toTimeString().split(' ')[0];
+            const div = document.createElement('div');
+            div.className = isAlert ? "log-alert" : "log-normal";
+            div.innerText = `[${time}] ${msg}`;
+            box.prepend(div);
+            if (box.children.length > 50) box.removeChild(box.lastChild);
+        }
+
+        function executeContainment() {
+            const bar = document.getElementById('containment-bar');
+            bar.style.background = "rgba(16, 185, 129, 0.2)";
+            bar.style.borderColor = "#10b981";
+            bar.innerHTML = `
+                <div>
+                    <b style="color:#a7f3d0; font-size:13px;">✅ MITIGATION SUCCESSFUL & CONTAINED</b>
+                    <p style="color:#e2e8f0; font-size:11px; margin:2px 0 0 0;">Actions executed: VPC Isolation + eBPF Shell Termination + Token Revoked</p>
+                </div>
+                <span style="background:#047857; color:#fff; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;">AUDIT LOGGED</span>
+            `;
+            logStream(`⚡ [AUTONOMOUS ACTION] Remediated incident on ${document.getElementById('target_entity').value}`, false);
+        }
+
         function runInspection() {
             const entity = document.getElementById('target_entity').value;
             const count = parseFloat(document.getElementById('count').value);
@@ -821,7 +1084,6 @@
             const root_shell = document.querySelector('input[name="root_shell"]:checked').value === "1";
             const su_attempted = document.querySelector('input[name="su_attempted"]:checked').value === "1";
 
-            // Calculate Z-Scores
             const z_count = ((count - baseline.count.mean) / baseline.count.std).toFixed(2);
             const z_diff = ((diff_srv - baseline.diff_srv_rate.mean) / baseline.diff_srv_rate.std).toFixed(2);
             const z_failed = failed_logins > 0 ? ((failed_logins - baseline.num_failed_logins.mean) / 0.02).toFixed(2) : "0.00";
@@ -870,12 +1132,15 @@
                 ];
             }
 
+            currentRemediations = remediations;
+
             // Update Verdict Box
             const vBox = document.getElementById('verdict-card');
             const vTitle = document.getElementById('verdict-title');
             const vBadge = document.getElementById('verdict-badge');
             const vScore = document.getElementById('verdict-score');
             const vDesc = document.getElementById('verdict-desc');
+            const cBar = document.getElementById('containment-bar');
 
             if (is_anomaly) {
                 vBox.className = "verdict-box anomaly";
@@ -885,6 +1150,17 @@
                 vScore.style.color = "#f87171";
                 vDesc.innerText = attack_cat;
                 vDesc.style.color = "#fca5a5";
+
+                cBar.style.display = "flex";
+                cBar.style.background = "rgba(239, 68, 68, 0.15)";
+                cBar.style.borderColor = "#ef4444";
+                cBar.innerHTML = `
+                    <div>
+                        <b style="color:#fecaca; font-size:13px;">🚨 Autonomous Incident Containment:</b>
+                        <p style="color:#e2e8f0; font-size:11px; margin:2px 0 0 0;" id="containment-desc">${remediations[0] || 'Isolate Node'}</p>
+                    </div>
+                    <button class="btn-contain" onclick="executeContainment()">⚡ Execute Containment</button>
+                `;
             } else {
                 vBox.className = "verdict-box normal";
                 vTitle.innerText = "🟢 NORMAL OPERATION";
@@ -893,6 +1169,7 @@
                 vScore.style.color = "#34d399";
                 vDesc.innerText = "Traffic aligns with 97,278 clean baseline patterns";
                 vDesc.style.color = "#a7f3d0";
+                cBar.style.display = "none";
             }
 
             // Update Table
@@ -952,7 +1229,6 @@ Remediation          : None required. Telemetry recorded in audit bus.
             document.getElementById('incident-report').innerText = reportText;
         }
 
-        // Initialize on load
         window.onload = function() {
             runInspection();
         };
