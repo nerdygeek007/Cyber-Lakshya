@@ -1,0 +1,75 @@
+{
+  "dataset": "KDD Real Cybersecurity Dataset (100,655 connections)",
+  "model": "Isolation Forest (Unsupervised)",
+  "training_samples": 97278,
+  "test_samples": 8377,
+  "roc_auc_score": 0.9793,
+  "attack_breakdown": [
+    {
+      "attack_type": "back",
+      "total_incidents": 25,
+      "detected": 0,
+      "detection_rate_pct": 0.0
+    },
+    {
+      "attack_type": "ipsweep",
+      "total_incidents": 9,
+      "detected": 2,
+      "detection_rate_pct": 22.22
+    },
+    {
+      "attack_type": "land",
+      "total_incidents": 1,
+      "detected": 1,
+      "detection_rate_pct": 100.0
+    },
+    {
+      "attack_type": "neptune",
+      "total_incidents": 892,
+      "detected": 892,
+      "detection_rate_pct": 100.0
+    },
+    {
+      "attack_type": "nmap",
+      "total_incidents": 2,
+      "detected": 1,
+      "detection_rate_pct": 50.0
+    },
+    {
+      "attack_type": "pod",
+      "total_incidents": 2,
+      "detected": 0,
+      "detection_rate_pct": 0.0
+    },
+    {
+      "attack_type": "portsweep",
+      "total_incidents": 7,
+      "detected": 7,
+      "detection_rate_pct": 100.0
+    },
+    {
+      "attack_type": "satan",
+      "total_incidents": 12,
+      "detected": 12,
+      "detection_rate_pct": 100.0
+    },
+    {
+      "attack_type": "smurf",
+      "total_incidents": 2412,
+      "detected": 2412,
+      "detection_rate_pct": 100.0
+    },
+    {
+      "attack_type": "teardrop",
+      "total_incidents": 5,
+      "detected": 2,
+      "detection_rate_pct": 40.0
+    },
+    {
+      "attack_type": "warezclient",
+      "total_incidents": 10,
+      "detected": 1,
+      "detection_rate_pct": 10.0
+    }
+  ]
+}
