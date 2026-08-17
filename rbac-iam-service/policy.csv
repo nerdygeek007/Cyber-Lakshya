@@ -1,0 +1,54 @@
+# 🛡️ AICTE DCIM 4-Tier RBAC Policy Definition (Casbin)
+# Format: p, role/subject, resource/object, action
+
+# ==========================================
+# Tier 1: SuperAdmin (Unrestricted Master Access)
+# ==========================================
+p, SuperAdmin, *, *
+
+# ==========================================
+# Tier 2: SecOps_Engineer (Firewall & Threat Containment)
+# ==========================================
+p, SecOps_Engineer, firewalls, *
+p, SecOps_Engineer, anomalies, read
+p, SecOps_Engineer, anomalies, remediate
+p, SecOps_Engineer, audit_logs, read
+p, SecOps_Engineer, servers, read
+p, SecOps_Engineer, telemetry, read
+
+# ==========================================
+# Tier 3: DataCenter_Operator (Physical & Virtual Compute Ops)
+# ==========================================
+p, DataCenter_Operator, servers, read
+p, DataCenter_Operator, servers, write
+p, DataCenter_Operator, racks, read
+p, DataCenter_Operator, racks, write
+p, DataCenter_Operator, assets, read
+p, DataCenter_Operator, assets, write
+p, DataCenter_Operator, telemetry, read
+
+# ==========================================
+# Tier 4: Auditor_Viewer (Compliance, NIST Logs, Read-Only)
+# ==========================================
+p, Auditor_Viewer, audit_logs, read
+p, Auditor_Viewer, compliance, read
+p, Auditor_Viewer, licenses, read
+p, Auditor_Viewer, servers, read
+p, Auditor_Viewer, firewalls, read
+p, Auditor_Viewer, anomalies, read
+p, Auditor_Viewer, telemetry, read
+
+# ==========================================
+# Role Hierarchy & Inheritance (g, child_role, parent_role)
+# ==========================================
+g, SuperAdmin, SecOps_Engineer
+g, SecOps_Engineer, Auditor_Viewer
+g, DataCenter_Operator, Auditor_Viewer
+
+# ==========================================
+# Default Institutional User Bindings (g, user, role)
+# ==========================================
+g, admin_chaitanya, SuperAdmin
+g, secops_jiya, SecOps_Engineer
+g, dc_het, DataCenter_Operator
+g, auditor_riddhi, Auditor_Viewer
