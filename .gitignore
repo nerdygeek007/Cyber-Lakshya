@@ -1,20 +1,47 @@
-# Virtual environments
-venv/
-**/venv/
-.venv/
-env/
-
-# Python cache
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-.pytest_cache/
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Large archives & temporary clones
+# Virtual Environments
+venv/
+*/venv/
+
+# Binary Documents & Draft Slides (Keep repo lean)
+*.docx
+*.pptx
+*.pdf
 *.zip
-hf-cloned-repo/
+*.tar.gz
 *.png
+*.jpg
+*.jpeg
+SIH_CHA-39/
+huggingface-space/
+hf-cloned-repo/
 
-# OS artifacts
+# IDE & System
 .DS_Store
-Thumbs.db
+.idea/
+.vscode/
+*.log
