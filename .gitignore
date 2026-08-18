@@ -1,0 +1,28 @@
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+*/venv/
+
+# Archives & Temporary binaries
+*.zip
+*.tar.gz
+*.png
+*.jpg
+*.jpeg
+*.docx
+*.pptx
+*.pdf
+Het_Database_Handoff_Package/
+SIH_CHA-39/
+hf-cloned-repo/
+huggingface-space/
+ml-service/
+rbac-iam-service/
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/
+*.log
