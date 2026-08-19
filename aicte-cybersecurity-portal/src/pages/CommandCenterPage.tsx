@@ -33,13 +33,13 @@ export const CommandCenterPage: React.FC<CommandCenterPageProps> = ({
 
   const triggerAttackSimulation = () => {
     setAttackActive(true);
-    setSimulationToast("⚠️ SYN Flood Anomaly Simulated! AI Isolation Forest scored Z-Score +4.12 on SRV-024.");
+    setSimulationToast("SYN Flood Anomaly Simulated: AI Isolation Forest scored Z-Score +4.12 on SRV-024.");
     setTimeout(() => setSimulationToast(null), 4000);
   };
 
   const resetAttackSimulation = () => {
     setAttackActive(false);
-    setSimulationToast("🟢 Perimeter rules reset to nominal baseline state.");
+    setSimulationToast("Perimeter rules reset to nominal baseline state.");
     setTimeout(() => setSimulationToast(null), 3000);
   };
 
@@ -310,7 +310,7 @@ export const CommandCenterPage: React.FC<CommandCenterPageProps> = ({
               <div className="flex items-center justify-between mb-3">
                 <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/40">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>
-                  🔴 Server SRV-024
+                  Server SRV-024
                 </span>
                 <span className="text-[11px] text-slate-400 font-mono">CPU: 97%</span>
               </div>
@@ -359,7 +359,7 @@ export const CommandCenterPage: React.FC<CommandCenterPageProps> = ({
               <div className="flex items-center justify-between mb-3">
                 <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/40">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                  🟠 Firewall FW-018
+                  Firewall FW-018
                 </span>
                 <span className="text-[11px] text-slate-400 font-mono">Port 22 WAN</span>
               </div>
@@ -408,7 +408,7 @@ export const CommandCenterPage: React.FC<CommandCenterPageProps> = ({
               <div className="flex items-center justify-between mb-3">
                 <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/40">
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-                  🟡 VMware License
+                  VMware License
                 </span>
                 <span className="text-[11px] text-amber-400 font-mono">8 Days Left</span>
               </div>

@@ -30,7 +30,7 @@ export const PresentationPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-100 flex flex-col justify-between font-sans relative overflow-hidden select-none">
+    <div className="min-h-[100dvh] bg-[#020617] text-slate-100 flex flex-col justify-between font-sans relative overflow-hidden select-none">
       {/* Background Cyber Ambient Radial Glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,242,254,0.06),transparent_50%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(99,102,241,0.06),transparent_50%)] pointer-events-none" />

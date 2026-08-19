@@ -240,7 +240,10 @@ export const InfrastructurePage: React.FC<InfrastructurePageProps> = ({ onOpenAs
                 >
                   <Globe className="w-5 h-5 text-blue-400 mx-auto mb-1" />
                   <span className="text-xs font-bold text-white block">Public Internet WAN</span>
-                  <span className="text-[10px] text-emerald-400 font-mono">🟢 10 Gbps Ingress</span>
+                  <span className="text-[10px] text-emerald-400 font-mono flex items-center justify-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    10 Gbps Ingress
+                  </span>
                 </div>
 
                 <div className="h-6 w-0.5 bg-gradient-to-b from-cyan-400 to-amber-400 animate-pulse"></div>
@@ -252,7 +255,10 @@ export const InfrastructurePage: React.FC<InfrastructurePageProps> = ({ onOpenAs
                 >
                   <Shield className="w-5 h-5 text-amber-400 mx-auto mb-1" />
                   <span className="text-xs font-bold text-white block">Edge Firewall (FW-018)</span>
-                  <span className="text-[10px] text-amber-300 font-mono">🟠 Rule R-102 External SSH Warning</span>
+                  <span className="text-[10px] text-amber-300 font-mono flex items-center justify-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    Rule R-102 External SSH Warning
+                  </span>
                 </div>
 
                 <div className="h-6 w-0.5 bg-gradient-to-b from-amber-400 to-cyan-400 animate-pulse"></div>
@@ -263,7 +269,10 @@ export const InfrastructurePage: React.FC<InfrastructurePageProps> = ({ onOpenAs
                   className="w-64 p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-center cursor-pointer hover:border-cyan-400 transition-all hover:scale-105"
                 >
                   <span className="text-xs font-bold text-white block">Core BGP Router (RTR-001)</span>
-                  <span className="text-[10px] text-emerald-400 font-mono">🟢 0.2ms Subnet Latency</span>
+                  <span className="text-[10px] text-emerald-400 font-mono flex items-center justify-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    0.2ms Subnet Latency
+                  </span>
                 </div>
 
                 <div className="h-6 w-0.5 bg-cyan-500/50"></div>
@@ -274,7 +283,10 @@ export const InfrastructurePage: React.FC<InfrastructurePageProps> = ({ onOpenAs
                   className="w-64 p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-center cursor-pointer hover:border-cyan-400 transition-all hover:scale-105"
                 >
                   <span className="text-xs font-bold text-white block">Distribution Switch (SW-001)</span>
-                  <span className="text-[10px] text-emerald-400 font-mono">🟢 48 x 100GbE Ports Active</span>
+                  <span className="text-[10px] text-emerald-400 font-mono flex items-center justify-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    48 x 100GbE Ports Active
+                  </span>
                 </div>
 
                 <div className="h-6 w-0.5 bg-cyan-500/50"></div>
@@ -286,7 +298,10 @@ export const InfrastructurePage: React.FC<InfrastructurePageProps> = ({ onOpenAs
                 >
                   <Activity className="w-5 h-5 text-cyan-400 mx-auto mb-1" />
                   <span className="text-xs font-bold text-white block">Portal Load Balancer (LB-001)</span>
-                  <span className="text-[10px] text-cyan-300 font-mono">🟢 18,240 req/min (4 Backends)</span>
+                  <span className="text-[10px] text-cyan-300 font-mono flex items-center justify-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    18,240 req/min (4 Backends)
+                  </span>
                 </div>
 
                 <div className="h-6 w-0.5 bg-cyan-500/50"></div>
