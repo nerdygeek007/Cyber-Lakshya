@@ -40,8 +40,15 @@ SIH_CHA-39/
 huggingface-space/
 hf-cloned-repo/
 
+# Node.js & Vite
+node_modules/
+*/node_modules/
+dist/
+*/dist/
+
 # IDE & System
 .DS_Store
 .idea/
 .vscode/
 *.log
+
