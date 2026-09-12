@@ -51,4 +51,6 @@ dist/
 .idea/
 .vscode/
 *.log
+.~lock.*
+
 

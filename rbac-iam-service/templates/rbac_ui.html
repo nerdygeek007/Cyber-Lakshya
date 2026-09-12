@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Lakshya | Zero-Trust Casbin RBAC & IAM Command Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#eef2ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#1e1b4b' },
+            dark: { 800: '#0f172a', 900: '#090d16', 950: '#040711' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-panel { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.6); }
+    .glow-green { box-shadow: 0 0 25px rgba(16, 185, 129, 0.3); }
+    .glow-red { box-shadow: 0 0 25px rgba(244, 63, 94, 0.3); }
+    .glow-indigo { box-shadow: 0 0 25px rgba(99, 102, 241, 0.3); }
+  </style>
+</head>
+<body class="bg-dark-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 glass-panel sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center space-x-3.5">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+        <i class="fa-solid fa-user-shield text-white text-lg"></i>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="text-base font-bold tracking-tight text-white">CYBER LAKSHYA</h1>
+          <span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full font-mono">RBAC / IAM</span>
+        </div>
+        <p class="text-xs text-slate-400">Zero-Trust Dynamic Casbin Policy & User Governance Subsystem</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center space-x-3">
+      <!-- Active Actor Badge -->
+      <div class="flex items-center space-x-2 text-xs font-mono bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
+        <span class="text-slate-500">Active Actor:</span>
+        <span id="header-actor-badge" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 font-bold border border-indigo-500/30">chaitanya (admin)</span>
+      </div>
+      <a href="/docs" target="_blank" class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center space-x-1.5">
+        <i class="fa-solid fa-code"></i>
+        <span>API Docs</span>
+      </a>
+      <a href="http://localhost:8000/ui" target="_blank" class="text-xs px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition font-medium shadow-sm flex items-center space-x-1.5">
+        <i class="fa-solid fa-brain"></i>
+        <span>ML Engine UI</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Column: Role Selector & Provisioning (5 Cols) -->
+    <section class="lg:col-span-5 space-y-6">
+      
+      <!-- 1-Click Role Persona Selector -->
+      <div class="glass-panel p-5 rounded-2xl shadow-xl">
+        <div class="flex items-center justify-between mb-3.5">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+            <i class="fa-solid fa-id-badge text-indigo-400"></i>
+            <span>1-Click Hackathon Role Login</span>
+          </h2>
+          <span class="text-[11px] text-slate-500 font-mono">Select Active User</span>
+        </div>
+
+        <div id="user-persona-list" class="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto pr-1">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- ➕ Provision New User & Role Assignment -->
+      <div class="glass-panel p-5 rounded-2xl shadow-xl space-y-3.5 border border-indigo-500/30">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center space-x-2">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Provision New User & Assign Role</span>
+          </h2>
+          <span class="text-[10px] px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded font-mono">Admin Only</span>
+        </div>
+
+        <div class="space-y-2.5 text-xs">
+          <div>
+            <label class="block text-slate-400 font-medium mb-1">New Username (ID):</label>
+            <input id="new-username" type="text" placeholder="e.g. rohit_secops" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 font-mono focus:outline-none focus:border-indigo-500">
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-medium mb-1">Full Name:</label>
+            <input id="new-fullname" type="text" placeholder="e.g. Rohit Verma" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 font-mono focus:outline-none focus:border-indigo-500">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-400 font-medium mb-1">Casbin Role:</label>
+              <select id="new-role" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-200 font-mono focus:outline-none focus:border-indigo-500">
+                <option value="secops">SecOps (SOC)</option>
+                <option value="technician" selected>Technician (Infra)</option>
+                <option value="auditor">Auditor (Compliance)</option>
+                <option value="viewer">Viewer (ReadOnly)</option>
+                <option value="admin">Administrator</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-slate-400 font-medium mb-1">Department:</label>
+              <input id="new-dept" type="text" value="Network Ops" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-200 font-mono focus:outline-none focus:border-indigo-500">
+            </div>
+          </div>
+        </div>
+
+        <button onclick="provisionUser()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-500/20 transition flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-plus-circle"></i>
+          <span>PROVISION USER & MAP CASBIN ROLE</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- Right Column: Live Decision, Sandbox & Dynamic Matrix (7 Cols) -->
+    <section class="lg:col-span-7 space-y-6">
+
+      <!-- Live Access Decision Card -->
+      <div id="decision-card" class="glass-panel p-5 rounded-2xl shadow-xl transition-all duration-300">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+            <i class="fa-solid fa-scale-balanced text-indigo-400"></i>
+            <span>Policy Evaluation Decision</span>
+          </h2>
+          <span id="decision-latency" class="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400">Latency: 0.001 ms</span>
+        </div>
+
+        <div class="flex items-center space-x-4 p-3.5 rounded-xl bg-slate-900/90 border border-slate-800" id="decision-banner">
+          <div id="decision-icon-box" class="w-11 h-11 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl">
+            <i class="fa-solid fa-circle-check" id="decision-icon"></i>
+          </div>
+          <div>
+            <div class="text-base font-black text-emerald-400 font-mono tracking-wide" id="decision-text">ALLOW — ACCESS GRANTED</div>
+            <p class="text-xs text-slate-400 mt-0.5" id="decision-desc">Subject has explicit authorization under the Casbin PERM policy rule.</p>
+          </div>
+        </div>
+
+        <!-- Token Info Box -->
+        <div class="mt-3 p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 font-mono text-[11px] space-y-1">
+          <div class="text-slate-400 font-semibold flex items-center justify-between">
+            <span>RFC 7519 JWT Signed Claims:</span>
+            <span id="jwt-issuer" class="text-indigo-400 text-[10px]">iss: cyber-lakshya-iam-auth</span>
+          </div>
+          <div class="text-slate-300 break-all text-[10px]" id="jwt-token-display">Click a persona to inspect signed token.</div>
+        </div>
+      </div>
+
+      <!-- Live Casbin Authorization Sandbox Form -->
+      <div class="glass-panel p-5 rounded-2xl shadow-xl space-y-3.5">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+          <i class="fa-solid fa-sliders text-emerald-400"></i>
+          <span>Live Casbin Authorization Sandbox</span>
+        </h2>
+
+        <div class="grid grid-cols-3 gap-2.5 text-xs">
+          <div>
+            <label class="block text-slate-400 font-medium mb-1">Subject:</label>
+            <input id="test-subject" type="text" value="chaitanya" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-200 font-mono focus:outline-none focus:border-emerald-500">
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-medium mb-1">Resource:</label>
+            <select id="test-resource" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-2 text-slate-200 font-mono focus:outline-none focus:border-emerald-500">
+              <option value="infra:servers">infra:servers</option>
+              <option value="security:firewalls">security:firewalls</option>
+              <option value="alerts:incidents">alerts:incidents</option>
+              <option value="compliance:audit_logs">compliance:audit_logs</option>
+              <option value="iam:users">iam:users</option>
+              <option value="reports:export">reports:export</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-medium mb-1">Action:</label>
+            <select id="test-action" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-2 text-slate-200 font-mono focus:outline-none focus:border-emerald-500">
+              <option value="read">read</option>
+              <option value="restart">restart</option>
+              <option value="quarantine">quarantine</option>
+              <option value="deploy">deploy</option>
+              <option value="export">export</option>
+              <option value="modify">modify</option>
+              <option value="create">create</option>
+            </select>
+          </div>
+        </div>
+
+        <button onclick="testAccess()" class="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-lock-open"></i>
+          <span>TEST CASBIN AUTHORIZATION</span>
+        </button>
+      </div>
+
+      <!-- ⚙️ Dynamic Access Control Modifier (Grant / Revoke) -->
+      <div class="glass-panel p-5 rounded-2xl shadow-xl space-y-3.5 border border-amber-500/30">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center space-x-2">
+            <i class="fa-solid fa-key"></i>
+            <span>Dynamic Access Control Modifier (Grant / Revoke)</span>
+          </h2>
+          <span class="text-[10px] px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded font-mono">Admin Guarded</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5 text-xs">
+          <div>
+            <label class="block text-slate-400 font-medium mb-1">Target Role/User:</label>
+            <select id="mutate-role" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-2 text-slate-200 font-mono focus:outline-none focus:border-amber-500">
+              <option value="technician">Technician</option>
+              <option value="secops">SecOps</option>
+              <option value="viewer">Viewer</option>
+              <option value="auditor">Auditor</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-medium mb-1">Resource:</label>
+            <select id="mutate-resource" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-2 text-slate-200 font-mono focus:outline-none focus:border-amber-500">
+              <option value="security:firewalls">security:firewalls</option>
+              <option value="infra:servers">infra:servers</option>
+              <option value="compliance:audit_logs">compliance:audit_logs</option>
+              <option value="reports:export">reports:export</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-medium mb-1">Action:</label>
+            <select id="mutate-action" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-2 text-slate-200 font-mono focus:outline-none focus:border-amber-500">
+              <option value="quarantine">quarantine</option>
+              <option value="deploy">deploy</option>
+              <option value="restart">restart</option>
+              <option value="export">export</option>
+              <option value="write">write</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="mutatePolicy('grant')" class="py-2.5 bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center space-x-1.5">
+            <i class="fa-solid fa-check"></i>
+            <span>GRANT PERMISSION</span>
+          </button>
+          <button onclick="mutatePolicy('revoke')" class="py-2.5 bg-rose-600/90 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center space-x-1.5">
+            <i class="fa-solid fa-ban"></i>
+            <span>REVOKE PERMISSION</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 5-Tier Permission Matrix Table -->
+      <div class="glass-panel p-5 rounded-2xl shadow-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+            <i class="fa-solid fa-table-cells text-amber-400"></i>
+            <span>Live 5-Tier Zero-Trust Matrix</span>
+          </h2>
+          <button onclick="runBenchmark()" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center space-x-1 font-mono">
+            <i class="fa-solid fa-stopwatch text-indigo-400"></i>
+            <span>Benchmark (1k)</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-mono" id="matrix-table">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400">
+                <th class="py-2 px-2">Resource & Action</th>
+                <th class="py-2 px-1 text-center text-indigo-400">Admin</th>
+                <th class="py-2 px-1 text-center text-rose-400">SecOps</th>
+                <th class="py-2 px-1 text-center text-amber-400">Tech</th>
+                <th class="py-2 px-1 text-center text-cyan-400">Audit</th>
+                <th class="py-2 px-1 text-center text-slate-400">Viewer</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-slate-300 text-[10px]">
+              <tr>
+                <td class="py-2 px-2 font-semibold text-slate-200">infra:servers (restart)</td>
+                <td class="py-2 px-1 text-center text-emerald-400 font-bold">✓ ALLOW</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+                <td class="py-2 px-1 text-center text-emerald-400 font-bold">✓ ALLOW</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 font-semibold text-slate-200">security:firewalls (quarantine)</td>
+                <td class="py-2 px-1 text-center text-emerald-400 font-bold">✓ ALLOW</td>
+                <td class="py-2 px-1 text-center text-emerald-400 font-bold">✓ ALLOW</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold" id="cell-tech-quarantine">✗ DENY</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 font-semibold text-slate-200">compliance:audit_logs (export)</td>
+                <td class="py-2 px-1 text-center text-emerald-400 font-bold">✓ ALLOW</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+                <td class="py-2 px-1 text-center text-emerald-400 font-bold">✓ ALLOW</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 font-semibold text-slate-200">iam:users (modify)</td>
+                <td class="py-2 px-1 text-center text-emerald-400 font-bold">✓ ALLOW</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+                <td class="py-2 px-1 text-center text-rose-400 font-bold">✗ DENY</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    let currentActor = "chaitanya";
+    let currentActorRole = "admin";
+    let activeToken = null;
+
+    async function loadDirectoryUsers() {
+      try {
+        const res = await fetch('/api/v1/iam/users');
+        const data = await res.json();
+        const container = document.getElementById('user-persona-list');
+        container.innerHTML = '';
+
+        data.users.forEach(u => {
+          const roleBadgeColor = 
+            u.primary_role === 'admin' ? 'text-indigo-400 bg-indigo-500/20 border-indigo-500/30' :
+            u.primary_role === 'secops' ? 'text-rose-400 bg-rose-500/20 border-rose-500/30' :
+            u.primary_role === 'technician' ? 'text-amber-400 bg-amber-500/20 border-amber-500/30' :
+            u.primary_role === 'auditor' ? 'text-cyan-400 bg-cyan-500/20 border-cyan-500/30' :
+            'text-slate-400 bg-slate-500/20 border-slate-500/30';
+
+          const icon = 
+            u.primary_role === 'admin' ? '👑' :
+            u.primary_role === 'secops' ? '🛡️' :
+            u.primary_role === 'technician' ? '🛠️' :
+            u.primary_role === 'auditor' ? '📜' : '👁️';
+
+          const btn = document.createElement('button');
+          btn.className = `p-2.5 text-left rounded-xl bg-slate-900/90 hover:bg-indigo-950/30 border border-slate-800 hover:border-indigo-500/40 transition group flex items-center justify-between ${currentActor === u.username ? 'border-indigo-500 ring-1 ring-indigo-500/50' : ''}`;
+          btn.onclick = () => selectPersona(u.username);
+          btn.innerHTML = `
+            <div class="flex items-center space-x-2.5">
+              <div class="w-7 h-7 rounded-lg ${roleBadgeColor} flex items-center justify-center text-xs">${icon}</div>
+              <div>
+                <div class="text-xs font-bold text-slate-200 group-hover:text-indigo-400 transition">${u.name} <span class="text-[10px] text-slate-500">(@${u.username})</span></div>
+                <div class="text-[10px] text-slate-400">${u.department} • <span class="font-mono font-semibold uppercase ${roleBadgeColor.split(' ')[0]}">${u.primary_role}</span></div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-600 group-hover:text-indigo-400 transition"></i>
+          `;
+          container.appendChild(btn);
+        });
+      } catch (e) {
+        console.error("Failed to load users", e);
+      }
+    }
+
+    async function selectPersona(username) {
+      currentActor = username;
+      document.getElementById('test-subject').value = username;
+
+      try {
+        const res = await fetch('/api/v1/iam/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: username })
+        });
+        const data = await res.json();
+        if (data.success) {
+          activeToken = data.token;
+          currentActorRole = data.user.role;
+          document.getElementById('jwt-token-display').innerText = activeToken;
+          document.getElementById('header-actor-badge').innerText = `${username} (${currentActorRole})`;
+          loadDirectoryUsers();
+          testAccess();
+        }
+      } catch (e) {
+        console.error("Login failed", e);
+      }
+    }
+
+    async function testAccess() {
+      const subject = document.getElementById('test-subject').value;
+      const resource = document.getElementById('test-resource').value;
+      const action = document.getElementById('test-action').value;
+
+      try {
+        const res = await fetch('/api/v1/iam/verify-access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subject, resource, action })
+        });
+        const data = await res.json();
+        renderDecision(data);
+      } catch (e) {
+        console.error("Access verification failed", e);
+      }
+    }
+
+    function renderDecision(data) {
+      const isAllowed = data.is_allowed;
+      const banner = document.getElementById('decision-banner');
+      const iconBox = document.getElementById('decision-icon-box');
+      const icon = document.getElementById('decision-icon');
+      const text = document.getElementById('decision-text');
+      const desc = document.getElementById('decision-desc');
+      const latency = document.getElementById('decision-latency');
+
+      latency.innerText = `Latency: ${data.evaluation_latency_ms} ms`;
+
+      if (isAllowed) {
+        banner.className = "flex items-center space-x-4 p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/50 glow-green transition-all";
+        iconBox.className = "w-11 h-11 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl";
+        icon.className = "fa-solid fa-circle-check";
+        text.className = "text-base font-black text-emerald-400 font-mono tracking-wide";
+        text.innerText = "ALLOW — ACCESS GRANTED";
+        desc.innerText = `Subject '${data.subject}' is explicitly authorized to '${data.action}' on '${data.resource}'.`;
+      } else {
+        banner.className = "flex items-center space-x-4 p-3.5 rounded-xl bg-rose-950/30 border border-rose-500/50 glow-red transition-all";
+        iconBox.className = "w-11 h-11 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 text-xl";
+        icon.className = "fa-solid fa-circle-xmark";
+        text.className = "text-base font-black text-rose-400 font-mono tracking-wide";
+        text.innerText = "DENY — ACCESS BLOCKED";
+        desc.innerText = `Zero-Trust Policy Block: '${data.subject}' lacks privilege to '${data.action}' on '${data.resource}'.`;
+      }
+    }
+
+    async function provisionUser() {
+      const username = document.getElementById('new-username').value.trim();
+      const name = document.getElementById('new-fullname').value.trim();
+      const role = document.getElementById('new-role').value;
+      const department = document.getElementById('new-dept').value.trim();
+
+      if (!username || !name) {
+        alert("Please enter both Username and Full Name.");
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/v1/iam/users/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ actor: currentActor, username, name, role, department })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert(`✅ Success: User '${username}' provisioned with role '${role}'!`);
+          document.getElementById('new-username').value = '';
+          document.getElementById('new-fullname').value = '';
+          loadDirectoryUsers();
+          selectPersona(username);
+        } else {
+          alert(`🚫 Zero-Trust Error (${res.status}): ${data.detail || 'Unauthorized'}`);
+        }
+      } catch (e) {
+        alert("Error connecting to IAM server");
+      }
+    }
+
+    async function mutatePolicy(actionType) {
+      const target_role_or_user = document.getElementById('mutate-role').value;
+      const resource = document.getElementById('mutate-resource').value;
+      const action = document.getElementById('mutate-action').value;
+      const endpoint = actionType === 'grant' ? '/api/v1/iam/policy/grant' : '/api/v1/iam/policy/revoke';
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ actor: currentActor, target_role_or_user, resource, action })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert(`✅ Policy Updated: ${data.message}`);
+          testAccess();
+        } else {
+          alert(`🚫 Zero-Trust Error (${res.status}): ${data.detail || 'Unauthorized'}`);
+        }
+      } catch (e) {
+        alert("Error mutating Casbin policy");
+      }
+    }
+
+    async function runBenchmark() {
+      try {
+        const res = await fetch('/api/v1/iam/benchmark');
+        const data = await res.json();
+        alert(`🏆 Casbin Benchmark Results:\n• Total Decisions: ${data.total_iterations}\n• Average Latency: ${data.avg_latency_ms} ms/request\n• Throughput: ${Number(data.requests_per_sec).toLocaleString()} requests/sec\n• Status: ${data.status}`);
+      } catch (e) {
+        alert("Benchmark error");
+      }
+    }
+
+    // Initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDirectoryUsers();
+      selectPersona('chaitanya');
+    });
+  </script>
+</body>
+</html>

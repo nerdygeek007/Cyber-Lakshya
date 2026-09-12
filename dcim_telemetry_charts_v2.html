@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurEdge — DCIM Holographic Telemetry & Flow Ops (Version 2)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-void: #020617;
+            --bg-glass: rgba(15, 23, 42, 0.85);
+            --bg-glass-card: rgba(30, 41, 59, 0.5);
+            --cyan-glow: #38bdf8;
+            --emerald-glow: #10b981;
+            --purple-glow: #c084fc;
+            --amber-glow: #f59e0b;
+            --crimson-glow: #f43f5e;
+            --border-neon: rgba(56, 189, 248, 0.2);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            min-height: 100vh;
+            padding: 24px;
+            background-image: 
+                radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(56, 189, 248, 0.1) 0px, transparent 50%);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1540px; margin: 0 auto; }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-neon);
+            border-radius: 16px;
+            padding: 20px 28px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(12px);
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-badge {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+        }
+
+        .brand-info h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-info p {
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+
+        /* 3-Pillar Efficiency Metrics Banner */
+        .efficiency-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .efficiency-bar { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .efficiency-bar { grid-template-columns: 1fr; }
+        }
+
+        .eff-card {
+            background: var(--bg-glass);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 16px 20px;
+            backdrop-filter: blur(8px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .eff-card .title { font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; }
+        .eff-card .value { font-size: 24px; font-weight: 800; font-family: 'JetBrains Mono'; margin: 4px 0; color: #ffffff; }
+        .eff-card .sub { font-size: 11px; color: #38bdf8; }
+
+        /* Main Dashboard Grid */
+        .grid-main {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 22px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1180px) {
+            .grid-main { grid-template-columns: 1fr; }
+        }
+
+        .glass-panel {
+            background: var(--bg-glass);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            backdrop-filter: blur(12px);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .panel-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-box {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* 3-Column Bottom Row */
+        .grid-3col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .grid-3col { grid-template-columns: 1fr; }
+        }
+
+        /* Protocol Flow Pills */
+        .protocol-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .protocol-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+
+        .proto-badge {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono';
+        }
+
+        .proto-https { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+        .proto-grpc { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+        .proto-ssh { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .proto-dns { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="brand-box">
+                <div class="brand-badge">🌐</div>
+                <div class="brand-info">
+                    <h1>SecurEdge &bull; Holographic Flow & Telemetry Ops (v2)</h1>
+                    <p>Sub-Millisecond Packet Latency, Protocol Traffic Flow & PUE Energy Efficiency</p>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="background:rgba(56, 189, 248, 0.15); border:1px solid rgba(56, 189, 248, 0.4); color:#38bdf8; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:700;">
+                    TIER IV DC SPECIFICATION ACTIVE
+                </span>
+            </div>
+        </div>
+
+        <!-- 4 Top Efficiency KPI Cards -->
+        <div class="efficiency-bar">
+            <div class="eff-card">
+                <div class="title">DCIM Energy PUE Rating</div>
+                <div class="value" style="color:#34d399;" id="kpi-pue">1.18 PUE</div>
+                <div class="sub">🍃 Ultra-Efficient Green Cooling</div>
+            </div>
+            <div class="eff-card">
+                <div class="title">Median Packet Latency (Jitter)</div>
+                <div class="value" style="color:#38bdf8;" id="kpi-latency">0.24 ms</div>
+                <div class="sub">⚡ 99th Percentile: 0.48 ms</div>
+            </div>
+            <div class="eff-card">
+                <div class="title">Active Hypervisor VMs</div>
+                <div class="value" style="color:#c084fc;" id="kpi-vms">142 VMs</div>
+                <div class="sub">🖥️ 16 Compute Blades Online</div>
+            </div>
+            <div class="eff-card">
+                <div class="title">Zero-Trust Threat Mitigation</div>
+                <div class="value" style="color:#f43f5e;" id="kpi-threats">100.0%</div>
+                <div class="sub">🛡️ 0 Uncontained Breaches</div>
+            </div>
+        </div>
+
+        <!-- Main 2-Column Row -->
+        <div class="grid-main">
+            <!-- Chart 1: Bandwidth & Packet Flow Streamgraph -->
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <h3>🌊 Protocol Bandwidth Volume Stream (Gbps)</h3>
+                    <span style="font-size:11px; color:#38bdf8; font-family:'JetBrains Mono';">Multi-Channel Ingestion</span>
+                </div>
+                <div class="chart-box">
+                    <canvas id="chartFlowStream"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Donut Storage & Memory Allocation Breakdown -->
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <h3>💾 NVMe & RAM Cluster Allocation</h3>
+                    <span style="font-size:11px; color:#c084fc; font-weight:700;">128 TB Pool</span>
+                </div>
+                <div class="chart-box">
+                    <canvas id="chartDonutStorage"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom 3-Column Row -->
+        <div class="grid-3col">
+            <!-- Col 1: Sub-Millisecond Latency Histogram -->
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <h3>⏱️ Packet Latency Distribution</h3>
+                    <span style="font-size:11px; color:#10b981; font-weight:700;">&lt; 0.5ms Norm</span>
+                </div>
+                <div class="chart-box" style="height:220px;">
+                    <canvas id="chartLatencyHist"></canvas>
+                </div>
+            </div>
+
+            <!-- Col 2: Protocol Traffic Breakdown -->
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <h3>🔀 Active Protocol Share</h3>
+                    <span style="font-size:11px; color:#f59e0b; font-weight:700;">Wire Ingress</span>
+                </div>
+                <div class="protocol-list">
+                    <div class="protocol-item">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="proto-badge proto-https">HTTPS / 443</span>
+                            <span style="font-size:12px; font-weight:600;">Secure Web & API</span>
+                        </div>
+                        <b style="color:#38bdf8; font-family:'JetBrains Mono';">58.4%</b>
+                    </div>
+                    <div class="protocol-item">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="proto-badge proto-grpc">gRPC / 50051</span>
+                            <span style="font-size:12px; font-weight:600;">Microservices Bus</span>
+                        </div>
+                        <b style="color:#c084fc; font-family:'JetBrains Mono';">18.2%</b>
+                    </div>
+                    <div class="protocol-item">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="proto-badge proto-dns">DNS / 53</span>
+                            <span style="font-size:12px; font-weight:600;">Core Resolution</span>
+                        </div>
+                        <b style="color:#34d399; font-family:'JetBrains Mono';">14.1%</b>
+                    </div>
+                    <div class="protocol-item">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="proto-badge proto-ssh">SSH / 22</span>
+                            <span style="font-size:12px; font-weight:600;">Admin Bastion</span>
+                        </div>
+                        <b style="color:#fbbf24; font-family:'JetBrains Mono';">9.3%</b>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Col 3: DCIM Power PUE Gauge -->
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <h3>⚡ Datacenter Power & Cooling Load</h3>
+                    <span style="font-size:11px; color:#38bdf8; font-weight:700;">32.4 kW Draw</span>
+                </div>
+                <div class="chart-box" style="height:220px;">
+                    <canvas id="chartPowerPue"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const timeLabels = Array.from({length: 18}, (_, i) => `${18 - i}s`);
+
+        // 1. Flow Stream Chart (Stacked Area Multi-Channel)
+        const ctxStream = document.getElementById('chartFlowStream').getContext('2d');
+        const chartFlowStream = new Chart(ctxStream, {
+            type: 'line',
+            data: {
+                labels: [...timeLabels],
+                datasets: [
+                    { label: 'HTTPS (API & Web)', data: [1.1, 1.2, 1.3, 1.2, 1.4, 1.5, 1.3, 1.4, 1.5, 1.6, 1.4, 1.5, 1.6, 1.7, 1.5, 1.6, 1.7, 1.6], borderColor: '#38bdf8', backgroundColor: 'rgba(56, 189, 248, 0.3)', fill: true, tension: 0.3 },
+                    { label: 'gRPC Internal Bus', data: [0.4, 0.5, 0.5, 0.4, 0.6, 0.6, 0.5, 0.6, 0.6, 0.7, 0.5, 0.6, 0.6, 0.7, 0.6, 0.6, 0.7, 0.6], borderColor: '#c084fc', backgroundColor: 'rgba(192, 132, 252, 0.25)', fill: true, tension: 0.3 },
+                    { label: 'Database Replication', data: [0.2, 0.3, 0.3, 0.2, 0.3, 0.4, 0.3, 0.3, 0.4, 0.4, 0.3, 0.3, 0.4, 0.4, 0.3, 0.4, 0.4, 0.4], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.2)', fill: true, tension: 0.3 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#64748b' } },
+                    y: { stacked: true, grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', callback: v => v + ' Gbps' } }
+                },
+                plugins: { legend: { labels: { color: '#cbd5e1', font: { size: 11 } } } }
+            }
+        });
+
+        // 2. Donut Storage Chart
+        const ctxDonut = document.getElementById('chartDonutStorage').getContext('2d');
+        const chartDonutStorage = new Chart(ctxDonut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Active Database Shards', 'AI Model Cache', 'Docker Image Registry', 'Immutable Audit Logs', 'Unallocated Free'],
+                datasets: [{
+                    data: [38, 24, 18, 12, 36],
+                    backgroundColor: ['#38bdf8', '#818cf8', '#c084fc', '#10b981', '#1e293b'],
+                    borderWidth: 2,
+                    borderColor: '#0b1329'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { color: '#cbd5e1', font: { size: 10 } } } }
+            }
+        });
+
+        // 3. Latency Histogram
+        const ctxLat = document.getElementById('chartLatencyHist').getContext('2d');
+        const chartLatencyHist = new Chart(ctxLat, {
+            type: 'bar',
+            data: {
+                labels: ['< 0.1ms', '0.1-0.3ms', '0.3-0.5ms', '0.5-1.0ms', '> 1.0ms'],
+                datasets: [{
+                    label: 'Packet Count (%)',
+                    data: [42, 38, 14, 4, 2],
+                    backgroundColor: ['#10b981', '#38bdf8', '#818cf8', '#fbbf24', '#f43f5e'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#cbd5e1', font: { size: 10 } } },
+                    y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', callback: v => v + '%' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // 4. Power & Cooling Bar Chart
+        const ctxPower = document.getElementById('chartPowerPue').getContext('2d');
+        const chartPowerPue = new Chart(ctxPower, {
+            type: 'bar',
+            data: {
+                labels: ['Compute Servers', 'Cooling Chillers', 'PDU & UPS Loss', 'Lighting & Aux'],
+                datasets: [{
+                    label: 'Power Draw (kW)',
+                    data: [24.2, 5.8, 1.8, 0.6],
+                    backgroundColor: ['#38bdf8', '#10b981', '#f59e0b', '#64748b'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#cbd5e1', font: { size: 10 } } },
+                    y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', callback: v => v + ' kW' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Real-Time 1.2-Second Stream Update
+        setInterval(() => {
+            const nextHttps = +(1.3 + Math.random() * 0.4).toFixed(2);
+            const nextGrpc = +(0.5 + Math.random() * 0.2).toFixed(2);
+            const nextDb = +(0.3 + Math.random() * 0.1).toFixed(2);
+
+            chartFlowStream.data.datasets[0].data.shift(); chartFlowStream.data.datasets[0].data.push(nextHttps);
+            chartFlowStream.data.datasets[1].data.shift(); chartFlowStream.data.datasets[1].data.push(nextGrpc);
+            chartFlowStream.data.datasets[2].data.shift(); chartFlowStream.data.datasets[2].data.push(nextDb);
+            chartFlowStream.update('none');
+
+            document.getElementById('kpi-latency').innerText = (0.22 + Math.random() * 0.05).toFixed(2) + ' ms';
+        }, 1200);
+    </script>
+</body>
+</html>

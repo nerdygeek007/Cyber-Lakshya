@@ -1,17 +1,26 @@
 [
   {
-    "incident_id": "SEC-EE45FAC7",
+    "incident_id": "SEC-AD5E6803",
     "target_entity": "Firewall-Node-01",
     "is_anomaly": true,
     "severity": "MEDIUM",
-    "anomaly_score": -0.0283,
-    "top_reason": "High-Velocity Connection Spike to Single Host (val: 150.0, Z: +8.01\u03c3) and port scanning / service reconnaissance sweep (val: 0.85)",
+    "risk_score": 0.6328,
+    "anomaly_score": 0.6328,
+    "model_breakdown": {
+      "tri_guard_composite": 0.6328,
+      "gmm_probabilistic": 1.0,
+      "autoencoder_mse": 0.2652,
+      "isolation_forest": 0.5598,
+      "gmm_cluster": 0,
+      "reconstruction_mse": 13.615933
+    },
+    "top_reason": "High-Velocity Connection Spike to Single Host (val: 180.0, Z: +9.7\u03c3) and port scanning / service reconnaissance sweep (val: 0.85)",
     "top_features": [
       {
         "feature": "count",
-        "value": 150.0,
+        "value": 180.0,
         "baseline_mean": 8.16,
-        "z_score": 8.01,
+        "z_score": 9.7,
         "description": "High-Velocity Connection Spike to Single Host"
       },
       {
@@ -22,28 +31,100 @@
         "description": "Port Scanning / Service Reconnaissance Sweep"
       }
     ],
+    "mitre_tactic": "[T1046] Network Service Discovery (Port Scan)",
+    "plain_language_card": {
+      "what_happened": "Multi-variate statistical outlier detected on Firewall-Node-01 primarily driven by High-Velocity Connection Spike to Single Host (val: 180.0, Z: +9.7\u03c3) and port scanning / service reconnaissance sweep (val: 0.85).",
+      "why_it_matters": "Deviation from established K=3 Gaussian operational baselines indicates potential security or hardware anomaly.",
+      "what_to_do": "Review real-time telemetry spline and assign diagnostic ticket to on-call technician.",
+      "who_handles_it": "Infrastructure Operations Team",
+      "mitre_tactic": "T1046: Network Service Discovery (Port Scan)",
+      "urgency_level": "MEDIUM",
+      "anomaly_score": 0.6328,
+      "ai_provider": "Deterministic MITRE Grounded Engine (Sub-0.1ms Latency)"
+    },
     "threat_report": {
-      "incident_id": "SEC-EE45FAC7",
-      "timestamp": "2026-08-17 21:26:39 IST",
+      "incident_id": "SEC-AD5E6803",
+      "timestamp": "2026-08-19 20:01:39 IST",
       "target_entity": "Firewall-Node-01",
       "severity": "MEDIUM",
       "category": "Reconnaissance: Port / Service Discovery Sweep",
-      "anomaly_score": -0.0283,
-      "summary": "High-Velocity Connection Spike to Single Host (val: 150.0, Z: +8.01\u03c3) and port scanning / service reconnaissance sweep (val: 0.85)",
+      "anomaly_score": -0.0299,
+      "summary": "High-Velocity Connection Spike to Single Host (val: 180.0, Z: +9.7\u03c3) and port scanning / service reconnaissance sweep (val: 0.85)",
       "remediation_actions": [
         "Deploy honeypot port listener to trace actor signature",
         "Apply default-deny ingress policy on non-standard ports",
         "Notify Security Operations Center (SOC) lead"
       ],
-      "markdown_report": "\ud83d\udea8 [INCIDENT #SEC-EE45FAC7] AUTONOMOUS AI THREAT INVESTIGATION\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nTarget Node / Entity : Firewall-Node-01\nTimestamp            : 2026-08-17 21:26:39 IST\nThreat Severity      : MEDIUM (Anomaly Score: -0.0283)\nThreat Category      : Reconnaissance: Port / Service Discovery Sweep\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udd0d ROOT CAUSE EVIDENCE & DEVIATION:\n  \u2022 High-Velocity Connection Spike to Single Host (Observed: 150.0, Baseline: 8.16, Z-Score: +8.01\u03c3)\n  \u2022 Port Scanning / Service Reconnaissance Sweep (Observed: 0.85, Baseline: 0.02, Z-Score: +7.13\u03c3)\n\n\u26a1 RECOMMENDED AUTONOMOUS REMEDIATION ACTIONS:\n  [1] Deploy honeypot port listener to trace actor signature\n  [2] Apply default-deny ingress policy on non-standard ports\n  [3] Notify Security Operations Center (SOC) lead\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
+      "markdown_report": "\ud83d\udea8 [INCIDENT #SEC-AD5E6803] AUTONOMOUS AI THREAT INVESTIGATION\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nTarget Node / Entity : Firewall-Node-01\nTimestamp            : 2026-08-19 20:01:39 IST\nThreat Severity      : MEDIUM (Anomaly Score: -0.0299)\nThreat Category      : Reconnaissance: Port / Service Discovery Sweep\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udd0d ROOT CAUSE EVIDENCE & DEVIATION:\n  \u2022 High-Velocity Connection Spike to Single Host (Observed: 180.0, Baseline: 8.16, Z-Score: +9.7\u03c3)\n  \u2022 Port Scanning / Service Reconnaissance Sweep (Observed: 0.85, Baseline: 0.02, Z-Score: +7.13\u03c3)\n\n\u26a1 RECOMMENDED AUTONOMOUS REMEDIATION ACTIONS:\n  [1] Deploy honeypot port listener to trace actor signature\n  [2] Apply default-deny ingress policy on non-standard ports\n  [3] Notify Security Operations Center (SOC) lead\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
     }
   },
   {
-    "incident_id": "SEC-213BC6DE",
+    "incident_id": "SEC-88D30F5B",
+    "target_entity": "Auth-Gateway-01",
+    "is_anomaly": true,
+    "severity": "MEDIUM",
+    "risk_score": 0.5625,
+    "anomaly_score": 0.5625,
+    "model_breakdown": {
+      "tri_guard_composite": 0.5625,
+      "gmm_probabilistic": 1.0,
+      "autoencoder_mse": 0.1411,
+      "isolation_forest": 0.4525,
+      "gmm_cluster": 0,
+      "reconstruction_mse": 7.243332
+    },
+    "top_reason": "Authentication Failure Spike (Possible Brute-Force / Credential Stuffing) (val: 7.0, Z: +336.89\u03c3)",
+    "top_features": [
+      {
+        "feature": "num_failed_logins",
+        "value": 7.0,
+        "baseline_mean": 0.0,
+        "z_score": 336.89,
+        "description": "Authentication Failure Spike (Possible Brute-Force / Credential Stuffing)"
+      }
+    ],
+    "mitre_tactic": "[T1110.001] Brute Force: Password Guessing",
+    "plain_language_card": {
+      "what_happened": "Multiple rapid failed authentication attempts detected targeting SSH/HTTPS ports on Auth-Gateway-01.",
+      "why_it_matters": "Unauthorized dictionary credential guessing to gain administrative shell access.",
+      "what_to_do": "Temporarily quarantine source IP and enforce MFA challenge.",
+      "who_handles_it": "Identity & Access Management Team",
+      "mitre_tactic": "T1110.001: Brute Force: Password Guessing",
+      "urgency_level": "MEDIUM",
+      "anomaly_score": 0.5625,
+      "ai_provider": "Deterministic MITRE Grounded Engine (Sub-0.1ms Latency)"
+    },
+    "threat_report": {
+      "incident_id": "SEC-88D30F5B",
+      "timestamp": "2026-08-19 20:01:39 IST",
+      "target_entity": "Auth-Gateway-01",
+      "severity": "HIGH",
+      "category": "Identity Abuse: Brute-Force / Credential Stuffing Attempt",
+      "anomaly_score": 0.0238,
+      "summary": "Authentication Failure Spike (Possible Brute-Force / Credential Stuffing) (val: 7.0, Z: +336.89\u03c3)",
+      "remediation_actions": [
+        "Temporarily lock account and trigger MFA re-challenge",
+        "Add source IP to rate-limiting blocklist at edge firewall",
+        "Audit recent successful access tokens for this subject"
+      ],
+      "markdown_report": "\ud83d\udea8 [INCIDENT #SEC-88D30F5B] AUTONOMOUS AI THREAT INVESTIGATION\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nTarget Node / Entity : Auth-Gateway-01\nTimestamp            : 2026-08-19 20:01:39 IST\nThreat Severity      : HIGH (Anomaly Score: 0.0238)\nThreat Category      : Identity Abuse: Brute-Force / Credential Stuffing Attempt\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udd0d ROOT CAUSE EVIDENCE & DEVIATION:\n  \u2022 Authentication Failure Spike (Possible Brute-Force / Credential Stuffing) (Observed: 7.0, Baseline: 0.0, Z-Score: +336.89\u03c3)\n\n\u26a1 RECOMMENDED AUTONOMOUS REMEDIATION ACTIONS:\n  [1] Temporarily lock account and trigger MFA re-challenge\n  [2] Add source IP to rate-limiting blocklist at edge firewall\n  [3] Audit recent successful access tokens for this subject\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
+    }
+  },
+  {
+    "incident_id": "SEC-3AE1ED37",
     "target_entity": "Core-DB-01",
     "is_anomaly": true,
-    "severity": "CRITICAL",
-    "anomaly_score": 0.0357,
+    "severity": "MEDIUM",
+    "risk_score": 0.5362,
+    "anomaly_score": 0.5362,
+    "model_breakdown": {
+      "tri_guard_composite": 0.5362,
+      "gmm_probabilistic": 1.0,
+      "autoencoder_mse": 0.0829,
+      "isolation_forest": 0.4286,
+      "gmm_cluster": 0,
+      "reconstruction_mse": 4.255629
+    },
     "top_reason": "Root Shell Execution / Elevation of Privilege (val: 1.0, Z: +65.03\u03c3) and superuser (su) escalation attempt (val: 1.0)",
     "top_features": [
       {
@@ -68,9 +149,20 @@
         "description": "Rapid File Creation Activity"
       }
     ],
+    "mitre_tactic": "[T1068] Exploitation for Privilege Escalation",
+    "plain_language_card": {
+      "what_happened": "Unauthorized elevation to root shell detected via unexpected eBPF execve call on Core-DB-01.",
+      "why_it_matters": "Potential binary compromise or privilege escalation attempting to bypass Casbin RBAC.",
+      "what_to_do": "Isolate server blade from internal subnet and capture memory dump.",
+      "who_handles_it": "Lead Systems Architect",
+      "mitre_tactic": "T1068: Exploitation for Privilege Escalation",
+      "urgency_level": "MEDIUM",
+      "anomaly_score": 0.5362,
+      "ai_provider": "Deterministic MITRE Grounded Engine (Sub-0.1ms Latency)"
+    },
     "threat_report": {
-      "incident_id": "SEC-213BC6DE",
-      "timestamp": "2026-08-17 21:26:39 IST",
+      "incident_id": "SEC-3AE1ED37",
+      "timestamp": "2026-08-19 20:01:39 IST",
       "target_entity": "Core-DB-01",
       "severity": "CRITICAL",
       "category": "Critical Breach: Privilege Escalation / Unauthorized Root Access",
@@ -81,7 +173,7 @@
         "Terminate active interactive shell processes via eBPF",
         "Initiate emergency incident response workflow"
       ],
-      "markdown_report": "\ud83d\udea8 [INCIDENT #SEC-213BC6DE] AUTONOMOUS AI THREAT INVESTIGATION\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nTarget Node / Entity : Core-DB-01\nTimestamp            : 2026-08-17 21:26:39 IST\nThreat Severity      : CRITICAL (Anomaly Score: 0.0357)\nThreat Category      : Critical Breach: Privilege Escalation / Unauthorized Root Access\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udd0d ROOT CAUSE EVIDENCE & DEVIATION:\n  \u2022 Root Shell Execution / Elevation of Privilege (Observed: 1.0, Baseline: 0.0, Z-Score: +65.03\u03c3)\n  \u2022 Superuser (su) Escalation Attempt (Observed: 1.0, Baseline: 0.0, Z-Score: +57.91\u03c3)\n  \u2022 Rapid File Creation Activity (Observed: 4.0, Baseline: 0.0, Z-Score: +19.69\u03c3)\n\n\u26a1 RECOMMENDED AUTONOMOUS REMEDIATION ACTIONS:\n  [1] Isolate server node from internal VPC network immediately\n  [2] Terminate active interactive shell processes via eBPF\n  [3] Initiate emergency incident response workflow\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
+      "markdown_report": "\ud83d\udea8 [INCIDENT #SEC-3AE1ED37] AUTONOMOUS AI THREAT INVESTIGATION\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nTarget Node / Entity : Core-DB-01\nTimestamp            : 2026-08-19 20:01:39 IST\nThreat Severity      : CRITICAL (Anomaly Score: 0.0357)\nThreat Category      : Critical Breach: Privilege Escalation / Unauthorized Root Access\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udd0d ROOT CAUSE EVIDENCE & DEVIATION:\n  \u2022 Root Shell Execution / Elevation of Privilege (Observed: 1.0, Baseline: 0.0, Z-Score: +65.03\u03c3)\n  \u2022 Superuser (su) Escalation Attempt (Observed: 1.0, Baseline: 0.0, Z-Score: +57.91\u03c3)\n  \u2022 Rapid File Creation Activity (Observed: 4.0, Baseline: 0.0, Z-Score: +19.69\u03c3)\n\n\u26a1 RECOMMENDED AUTONOMOUS REMEDIATION ACTIONS:\n  [1] Isolate server node from internal VPC network immediately\n  [2] Terminate active interactive shell processes via eBPF\n  [3] Initiate emergency incident response workflow\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550"
     }
   }
 ]

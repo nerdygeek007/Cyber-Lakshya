@@ -1,0 +1,59 @@
+# Casbin Zero-Trust RBAC Policy Definition for AICTE Cyber Lakshya (CHA-39)
+# Format: p, role, resource, action
+
+# =========================================================================
+# 1. Administrator (SuperAdmin - Full Access)
+# =========================================================================
+p, role:admin, infra:servers, (read|write|restart|delete)
+p, role:admin, security:firewalls, (read|write|deploy|quarantine)
+p, role:admin, alerts:incidents, (read|acknowledge|assign|resolve)
+p, role:admin, compliance:audit_logs, (read|export|sign)
+p, role:admin, iam:users, (read|create|modify|delete|assign_role)
+p, role:admin, reports:export, (read|generate)
+
+# =========================================================================
+# 2. Security Officer (SecOps / SOC Analyst)
+# =========================================================================
+p, role:secops, infra:servers, read
+p, role:secops, security:firewalls, (read|write|deploy|quarantine)
+p, role:secops, alerts:incidents, (read|acknowledge|assign|resolve)
+p, role:secops, compliance:audit_logs, read
+p, role:secops, iam:users, read
+p, role:secops, reports:export, (read|generate)
+
+# =========================================================================
+# 3. Technician (Infrastructure & Hardware Maintenance)
+# =========================================================================
+p, role:technician, infra:servers, (read|restart)
+p, role:technician, security:firewalls, read
+p, role:technician, alerts:incidents, (read|acknowledge)
+p, role:technician, compliance:audit_logs, read
+p, role:technician, reports:export, read
+
+# =========================================================================
+# 4. Auditor (Compliance Officer / CERT-In Evaluator)
+# =========================================================================
+p, role:auditor, infra:servers, read
+p, role:auditor, security:firewalls, read
+p, role:auditor, alerts:incidents, read
+p, role:auditor, compliance:audit_logs, (read|export|sign)
+p, role:auditor, iam:users, read
+p, role:auditor, reports:export, (read|generate)
+
+# =========================================================================
+# 5. Viewer (Guest / Public Dashboard Status)
+# =========================================================================
+p, role:viewer, infra:servers, read
+p, role:viewer, reports:export, read
+
+# =========================================================================
+# User-to-Role Mappings (g = user, role)
+# =========================================================================
+g, user:chaitanya, role:admin
+g, user:maharshi, role:secops
+g, user:siddharth, role:secops
+g, user:het, role:admin
+g, user:jiya, role:technician
+g, user:riddhi, role:viewer
+g, user:auditor_aicte, role:auditor
+g, user:technician_delhi, role:technician

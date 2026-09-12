@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurEdge — Enterprise SOC & DCIM Quantum Telemetry (Version 3)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- ApexCharts CDN for Enterprise High-Performance Visuals -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        :root {
+            --bg-canvas: #020617;
+            --bg-panel: rgba(15, 23, 42, 0.78);
+            --border-panel: rgba(56, 189, 248, 0.22);
+            --border-subtle: #1e293b;
+            --cyan: #00f2fe;
+            --indigo: #6366f1;
+            --emerald: #10b981;
+            --rose: #f43f5e;
+            --amber: #f59e0b;
+            --purple: #a855f7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            min-height: 100vh;
+            padding: 24px;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 40%),
+                radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.12) 0px, transparent 40%);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1560px; margin: 0 auto; }
+
+        /* Top Header */
+        .top-header {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(11, 19, 41, 0.98));
+            border: 1px solid var(--border-panel);
+            border-radius: 16px;
+            padding: 20px 28px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 10px 30px -10px rgba(0, 242, 254, 0.2);
+            backdrop-filter: blur(16px);
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #00f2fe, #6366f1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+        }
+
+        .brand-section h1 {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-section p {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Top Simulation Action Buttons */
+        .simulation-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sim {
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-attack {
+            background: rgba(244, 63, 94, 0.15);
+            border-color: rgba(244, 63, 94, 0.4);
+            color: #fb7185;
+        }
+        .btn-attack:hover {
+            background: rgba(244, 63, 94, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4);
+        }
+
+        .btn-remediate {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #34d399;
+        }
+        .btn-remediate:hover {
+            background: rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* 4 Top KPI Cards */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .kpi-row { grid-template-columns: 1fr; }
+        }
+
+        .kpi-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 18px 20px;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: 0.6;
+        }
+
+        .kpi-card .label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .kpi-card .value { font-size: 26px; font-weight: 800; font-family: 'JetBrains Mono'; margin: 4px 0; color: #ffffff; }
+        .kpi-card .footer-text { font-size: 11px; font-weight: 600; }
+
+        /* Grid Layout */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 22px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1180px) {
+            .grid-2col { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(14px);
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .panel-head h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Honeycomb Node Cluster Grid */
+        .honeycomb-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            padding: 12px 0;
+        }
+
+        @media (max-width: 768px) {
+            .honeycomb-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .hex-node {
+            background: #0b1329;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .hex-node:hover {
+            transform: translateY(-3px);
+            border-color: var(--cyan);
+            box-shadow: 0 4px 14px rgba(0, 242, 254, 0.25);
+        }
+
+        .hex-name { font-size: 10px; font-weight: 700; color: #94a3b8; margin-bottom: 4px; }
+        .hex-status { font-size: 11px; font-weight: 800; font-family: 'JetBrains Mono'; }
+        
+        .status-healthy { color: #34d399; }
+        .status-warning { color: #fbbf24; }
+        .status-danger { color: #f87171; animation: pulseRed 1.5s infinite; }
+
+        @keyframes pulseRed {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Geo-IP Visual Attack Canvas */
+        .geo-canvas-container {
+            position: relative;
+            background: #080e1e;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            height: 240px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .geo-feed-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .geo-feed-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="top-header">
+            <div class="brand-section">
+                <div class="brand-logo">🌌</div>
+                <div>
+                    <h1>SecurEdge &bull; Quantum Telemetry & Threat Ops (v3)</h1>
+                    <p>Enterprise Real-Time Ingress Flow, Treemaps, Polar Threat Analysis & Cluster Honeycomb</p>
+                </div>
+            </div>
+            <div class="simulation-bar">
+                <button class="btn-sim btn-attack" onclick="injectDistributedAttack()">💥 Simulate Multi-Vector Attack</button>
+                <button class="btn-sim btn-remediate" onclick="remediateAndContain()">🛡️ 1-Click eBPF Containment</button>
+            </div>
+        </div>
+
+        <!-- 4 Top KPI Metric Cards -->
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="label">Ingress Connection Rate</div>
+                <div class="value" id="kpi-ingress">1,480 pkts/s</div>
+                <div class="footer-text" style="color:#34d399;">▲ 99.4% Verified Clean Wire Flow</div>
+            </div>
+            <div class="kpi-card">
+                <div class="label">Zero-Trust Mitigated Drops</div>
+                <div class="value" style="color:#f43f5e;" id="kpi-drops">184 Drops</div>
+                <div class="footer-text" style="color:#fb7185;">● 0 Breach Exfiltrations</div>
+            </div>
+            <div class="kpi-card">
+                <div class="label">AI Inference Decision Time</div>
+                <div class="value" style="color:#00f2fe;" id="kpi-inference">0.012 ms</div>
+                <div class="footer-text" style="color:#38bdf8;">⚡ Sub-Millisecond Isolation Forest</div>
+            </div>
+            <div class="kpi-card">
+                <div class="label">Active Cluster Nodes</div>
+                <div class="value" style="color:#c084fc;">24 / 24 Online</div>
+                <div class="footer-text" style="color:#a855f7;">🖥️ 100% Hypervisor Health</div>
+            </div>
+        </div>
+
+        <!-- Middle Row: Apex Spline Bandwidth Waveform & Treemap Protocol Distribution -->
+        <div class="grid-2col">
+            <!-- Apex Spline Area Waveform -->
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>🌊 High-Resolution Bandwidth Waveform (Gbps)</h3>
+                    <span style="font-size:11px; color:#00f2fe; font-family:'JetBrains Mono';">Apex Multi-Layer</span>
+                </div>
+                <div id="chartApexWaveform" style="height:300px;"></div>
+            </div>
+
+            <!-- Treemap: Firewall Rule Traffic Allocation -->
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>🌲 Firewall Protocol Treemap Allocation</h3>
+                    <span style="font-size:11px; color:#c084fc; font-weight:700;">Wire Ingress</span>
+                </div>
+                <div id="chartApexTreemap" style="height:300px;"></div>
+            </div>
+        </div>
+
+        <!-- Bottom Row: Polar Area Cyber Threat Rose & Honeycomb Cluster Grid -->
+        <div class="grid-2col">
+            <!-- Polar Area Threat Severity Distribution -->
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>🌸 Polar Threat Vector Distribution (Nightingale Rose)</h3>
+                    <span style="font-size:11px; color:#f43f5e; font-weight:700;">Multi-Dimensional</span>
+                </div>
+                <div id="chartApexPolar" style="height:300px;"></div>
+            </div>
+
+            <!-- Honeycomb 24-Node Cluster Grid -->
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>⬡ Datacenter Compute Cluster Honeycomb (24 Nodes)</h3>
+                    <span style="font-size:11px; color:#34d399; font-weight:700;" id="honeycomb-status-badge">All Optimal</span>
+                </div>
+                <div class="honeycomb-grid" id="honeycomb-container">
+                    <!-- Dynamic Hex Nodes -->
+                </div>
+                
+                <div class="geo-feed-list" style="margin-top:14px;">
+                    <div class="geo-feed-item">
+                        <span>🔥 <b>Latest Threat Ingress:</b> SYN Flood on Port 80 from <code>198.51.100.42</code></span>
+                        <span style="color:#f43f5e; font-weight:700;">DROPPED (0.01ms)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. ApexCharts: Smooth Gradient Waveform
+        const waveformOptions = {
+            series: [
+                { name: 'Ingress Throughput (Gbps)', data: [1.2, 1.4, 1.3, 1.6, 1.8, 1.5, 1.7, 1.9, 1.8, 1.6, 1.7, 2.0, 1.9, 1.8, 1.7, 1.9] },
+                { name: 'Egress Traffic (Gbps)', data: [0.8, 0.9, 0.9, 1.1, 1.2, 1.0, 1.1, 1.3, 1.2, 1.1, 1.2, 1.4, 1.3, 1.2, 1.1, 1.3] }
+            ],
+            chart: {
+                type: 'area',
+                height: 290,
+                toolbar: { show: false },
+                animations: { enabled: true, easing: 'linear', dynamicAnimation: { speed: 1000 } },
+                background: 'transparent'
+            },
+            colors: ['#00f2fe', '#6366f1'],
+            fill: {
+                type: 'gradient',
+                gradient: { shadeIntensity: 1, opacityFrom: 0.45, opacityTo: 0.05, stops: [0, 90, 100] }
+            },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: 2.5 },
+            grid: { borderColor: '#1e293b', strokeDashArray: 4 },
+            xaxis: {
+                categories: ['15s', '14s', '13s', '12s', '11s', '10s', '9s', '8s', '7s', '6s', '5s', '4s', '3s', '2s', '1s', 'Now'],
+                labels: { style: { colors: '#64748b', fontSize: '11px' } }
+            },
+            yaxis: {
+                labels: { style: { colors: '#94a3b8' }, formatter: v => v.toFixed(1) + ' G' }
+            },
+            theme: { mode: 'dark' },
+            legend: { labels: { colors: '#cbd5e1' } }
+        };
+        const chartWave = new ApexCharts(document.querySelector("#chartApexWaveform"), waveformOptions);
+        chartWave.render();
+
+        // 2. ApexCharts: Protocol Treemap with Live Numbers & Percentages
+        const treemapOptions = {
+            series: [{
+                data: [
+                    { x: 'HTTPS (Port 443)', y: 480 },
+                    { x: 'gRPC Bus (50051)', y: 220 },
+                    { x: 'PostgreSQL DB (5432)', y: 160 },
+                    { x: 'Zero-Trust eBPF Blocked', y: 140 },
+                    { x: 'DNS Resolution (53)', y: 110 },
+                    { x: 'SSH Bastion (22)', y: 75 }
+                ]
+            }],
+            chart: {
+                type: 'treemap',
+                height: 290,
+                toolbar: { show: false },
+                background: 'transparent'
+            },
+            colors: ['#00f2fe', '#6366f1', '#10b981', '#f43f5e', '#38bdf8', '#f59e0b'],
+            theme: { mode: 'dark' },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    fontFamily: 'JetBrains Mono, monospace'
+                },
+                formatter: function(text, op) {
+                    return [text, op.value + ' Mbps'];
+                },
+                offsetY: -2
+            },
+            plotOptions: {
+                treemap: {
+                    distributed: true,
+                    enableShades: false
+                }
+            },
+            tooltip: {
+                theme: 'dark',
+                y: {
+                    formatter: function(val) {
+                        const total = 1185;
+                        const pct = ((val / total) * 100).toFixed(1);
+                        return val + ' Mbps (' + pct + '% of Wire Traffic)';
+                    }
+                }
+            }
+        };
+        const chartTreemap = new ApexCharts(document.querySelector("#chartApexTreemap"), treemapOptions);
+        chartTreemap.render();
+
+        // 3. ApexCharts: Polar Area Nightingale Threat Rose
+        const polarOptions = {
+            series: [88, 72, 45, 94, 28, 62],
+            chart: {
+                type: 'polarArea',
+                height: 290,
+                toolbar: { show: false },
+                background: 'transparent'
+            },
+            labels: ['SYN Flood', 'Port Sweep', 'Root Shell Probe', 'ICMP Smurf', 'Privilege Esc', 'IP Spoofing'],
+            colors: ['#f43f5e', '#fb7185', '#f59e0b', '#c084fc', '#38bdf8', '#10b981'],
+            stroke: { colors: ['#0b1329'] },
+            fill: { opacity: 0.8 },
+            theme: { mode: 'dark' },
+            yaxis: { show: false },
+            legend: { position: 'right', labels: { colors: '#cbd5e1', fontSize: '11px' } }
+        };
+        const chartPolar = new ApexCharts(document.querySelector("#chartApexPolar"), polarOptions);
+        chartPolar.render();
+
+        // 4. Render 24-Node Honeycomb Cluster Grid
+        const totalNodes = 24;
+        let nodeStates = Array.from({length: totalNodes}, (_, i) => ({
+            id: `Node-${i + 1}`,
+            status: 'HEALTHY',
+            load: Math.floor(Math.random() * 30) + 30
+        }));
+
+        function renderHoneycomb() {
+            const container = document.getElementById('honeycomb-container');
+            if (!container) return;
+
+            container.innerHTML = nodeStates.map(n => {
+                const statusClass = n.status === 'DANGER' ? 'status-danger' : n.status === 'WARNING' ? 'status-warning' : 'status-healthy';
+                return `
+                    <div class="hex-node">
+                        <div class="hex-name">${n.id}</div>
+                        <div class="hex-status ${statusClass}">${n.load}%</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Simulation Triggers
+        function injectDistributedAttack() {
+            // Update Ingress KPI & Drops
+            document.getElementById('kpi-ingress').innerText = "3,420 pkts/s";
+            document.getElementById('kpi-drops').innerText = "890 Drops";
+
+            // Update Waveform Data to Spike
+            chartWave.updateSeries([
+                { name: 'Ingress Throughput (Gbps)', data: [1.2, 1.4, 1.3, 1.6, 2.4, 3.1, 3.8, 3.6, 3.4, 2.9, 3.2, 3.7, 3.5, 3.3, 3.6, 3.8] },
+                { name: 'Egress Traffic (Gbps)', data: [0.8, 0.9, 0.9, 1.1, 1.4, 1.6, 1.8, 1.7, 1.5, 1.4, 1.5, 1.7, 1.6, 1.5, 1.6, 1.7] }
+            ]);
+
+            // Polar Area Threat Maxima
+            chartPolar.updateSeries([98, 92, 85, 99, 65, 80]);
+
+            // Turn 6 Nodes into Alert Status
+            nodeStates[2].status = 'DANGER'; nodeStates[2].load = 96;
+            nodeStates[5].status = 'DANGER'; nodeStates[5].load = 94;
+            nodeStates[11].status = 'WARNING'; nodeStates[11].load = 82;
+            nodeStates[17].status = 'DANGER'; nodeStates[17].load = 91;
+            renderHoneycomb();
+
+            const badge = document.getElementById('honeycomb-status-badge');
+            badge.innerText = "🚨 3 Nodes Under Attack";
+            badge.style.color = "#f43f5e";
+        }
+
+        function remediateAndContain() {
+            document.getElementById('kpi-ingress').innerText = "1,520 pkts/s";
+            document.getElementById('kpi-drops').innerText = "14 Drops";
+
+            chartWave.updateSeries([
+                { name: 'Ingress Throughput (Gbps)', data: [1.2, 1.4, 1.3, 1.5, 1.7, 1.6, 1.5, 1.6, 1.5, 1.6, 1.5, 1.6, 1.5, 1.6, 1.5, 1.5] },
+                { name: 'Egress Traffic (Gbps)', data: [0.8, 0.9, 0.9, 1.0, 1.1, 1.0, 1.1, 1.1, 1.0, 1.1, 1.0, 1.1, 1.0, 1.1, 1.0, 1.1] }
+            ]);
+
+            chartPolar.updateSeries([20, 15, 10, 15, 8, 12]);
+
+            nodeStates.forEach(n => {
+                n.status = 'HEALTHY';
+                n.load = Math.floor(Math.random() * 25) + 35;
+            });
+            renderHoneycomb();
+
+            const badge = document.getElementById('honeycomb-status-badge');
+            badge.innerText = "🟢 100% Contained & Healthy";
+            badge.style.color = "#34d399";
+        }
+
+        window.onload = function() {
+            renderHoneycomb();
+        };
+    </script>
+</body>
+</html>
